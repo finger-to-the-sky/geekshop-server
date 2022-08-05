@@ -1,6 +1,6 @@
 from django.shortcuts import render
+from django.conf import settings
 import json
-
 def index(request):
     context = {
         'title': 'GeekShop',
@@ -8,10 +8,9 @@ def index(request):
     return render(request, 'products/index.html', context)
 
 def products(request):
+    file_path = settings.BASE_DIR / 'products/fixtures/products.json'
 
-    with open('/home/zagmak/PycharmProjects/geekshop-server/geekshop/products/fixtures/products.json', 'r',
-              encoding='UTF-8') as f:
-        data = json.load(f)
+    data = json.load(open(file_path, encoding='UTF-8'))
 
     context = {
         'title': 'GeekShop - Продукты',
