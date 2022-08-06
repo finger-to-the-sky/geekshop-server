@@ -1,22 +1,26 @@
 from django.shortcuts import render
 from django.conf import settings
 import json
+
+from .models import ProductCategory, Product
+
 def index(request):
     context = {
         'title': 'GeekShop',
     }
     return render(request, 'products/index.html', context)
 
-def products(request):
-    file_path = settings.BASE_DIR / 'products/fixtures/products.json'
-
-    data = json.load(open(file_path, encoding='UTF-8'))
+def products(request, category_id=None):
+    if category_id:
+        products = Product.objects.filter(category_id=category_id)
+    else:
+        products = Product.objects.all()
 
     context = {
         'title': 'GeekShop - Продукты',
-        'products': []
+        'categories' : ProductCategory.objects.all(),
+        'products': products
     }
-    for item in data:
-        context['products'].append(item['fields'])
+
 
     return render(request, 'products/products.html', context)
