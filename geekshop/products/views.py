@@ -18,7 +18,7 @@ def products(request, category_id=None):
 
     context = {
         'title': 'GeekShop - Продукты',
-        'categories' : ProductCategory.objects.all(),
+        'categories':  ProductCategory.objects.all(),
         'products': products
     }
 
