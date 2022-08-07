@@ -1,9 +1,12 @@
 from django.shortcuts import render
 
-# Create your views here.
+from .forms import UserLoginFrom
 def login(request):
+    form = UserLoginFrom()
+
     context = {
-        'title': 'GeekShop - Авторизация'
+        'title': 'GeekShop - Авторизация',
+        'form' : form,
     }
 
     return render(request, 'users/login.html', context)
