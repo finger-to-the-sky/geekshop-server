@@ -3,6 +3,8 @@ from django.shortcuts import render, HttpResponseRedirect
 from products.models import Product
 from .models import Basket
 
+
+
 def basket_add(request, product_id):
     product = Product.objects.get(id=product_id)
     baskets = Basket.objects.filter(user=request.user, product=product)
