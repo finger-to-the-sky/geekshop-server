@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib import messages
 
 from .forms import UserLoginForm, UserRegistationForm, UserProfileForm
-
+from baskets.models import Basket
 
 
 def login(request):
@@ -51,7 +51,9 @@ def profile(request):
         form = UserProfileForm(instance=request.user)
 
     context = {
-        'title': 'GeekShop - Профиль', 'form': form,
+        'title': 'GeekShop - Профиль',
+        'form': form,
+        'baskets': Basket.objects.all(),
     }
     return render(request, 'users/profile.html', context)
 
