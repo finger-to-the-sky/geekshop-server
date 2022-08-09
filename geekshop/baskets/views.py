@@ -6,7 +6,8 @@ from django.http import JsonResponse
 from products.models import Product
 from .models import Basket
 
-
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 @login_required
 def basket_add(request, product_id):
     product = Product.objects.get(id=product_id)
@@ -31,8 +32,7 @@ def basket_remove(request, id):
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
-def is_ajax(request):
-    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
 @login_required
 def basket_edit(request, id, quantity):
     if is_ajax(request=request):
