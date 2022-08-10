@@ -1,11 +1,12 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 
 from admins.forms import UserAdminRegistrationFrom, UserAdminProfileFrom
 from users.models import User
 
-
+@user_passes_test(lambda u: u.is_staff)
 def index(request):
     context = {
         'title': 'GeekShop - Admin'
@@ -15,6 +16,7 @@ def index(request):
 
 
 # Read Controller
+@user_passes_test(lambda u: u.is_staff)
 def admins_users(request):
     users = User.objects.all()
 
@@ -24,6 +26,9 @@ def admins_users(request):
     }
     return render(request, 'admins/admin-users-read.html', context)
 
+
+# Create Controller
+@user_passes_test(lambda u: u.is_staff)
 def admin_users_create(request):
     if request.method == 'POST':
         form = UserAdminRegistrationFrom(data=request.POST, files=request.FILES)
@@ -37,7 +42,9 @@ def admin_users_create(request):
     context = {'title': 'Создание пользователя', 'form': form, }
     return render(request, 'admins/admin-users-create.html', context)
 
+
 # Update controller
+@user_passes_test(lambda u: u.is_staff)
 def admin_users_update(request, pk):
     selected_user = User.objects.get(id=pk)
     if request.method == 'POST':
@@ -59,6 +66,8 @@ def admin_users_update(request, pk):
     return render(request, 'admins/admin-users-update-delete.html', context)
 
 
+# Delete Controller
+@user_passes_test(lambda u: u.is_staff)
 def admin_users_delete(request, pk):
     user = User.objects.get(id=pk)
     user.save_delete()
