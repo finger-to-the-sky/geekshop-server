@@ -31,8 +31,7 @@ def admin_users_create(request):
             form.save()
             messages.success(request, 'Пользователь успешно создан!')
             return HttpResponseRedirect(reverse('admins_staff:admins_users'))
-        else:
-            print(form.errors)
+
     else:
         form = UserAdminRegistrationFrom()
     context = {'title': 'Создание пользователя', 'form': form}
