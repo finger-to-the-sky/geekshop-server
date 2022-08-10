@@ -61,6 +61,6 @@ def admin_users_update(request, pk):
 
 def admin_users_delete(request, pk):
     user = User.objects.get(id=pk)
-    user.delete()
-    messages.success(request, 'Пользователь удален!')
+    user.save_delete()
+    messages.success(request, 'Пользователь деактивирован!')
     return HttpResponseRedirect(reverse('admins_staff:admins_users'))
