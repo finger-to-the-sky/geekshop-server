@@ -26,7 +26,7 @@ def basket_add(request, product_id):
             'baskets': baskets,
             'products': products
         }
-        result = render_to_string('products/products_list.html', context)
+        result = render_to_string('products/product_list.html', context)
         return JsonResponse({'result': result})
 
 @login_required
