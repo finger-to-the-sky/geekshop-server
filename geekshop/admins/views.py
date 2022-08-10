@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 
-from admins.forms import UserAdminRegistrationFrom
+from admins.forms import UserAdminRegistrationFrom, UserAdminProfileFrom
 from users.models import User
 
 
@@ -34,5 +34,26 @@ def admin_users_create(request):
 
     else:
         form = UserAdminRegistrationFrom()
-    context = {'title': 'Создание пользователя', 'form': form}
+    context = {'title': 'Создание пользователя', 'form': form, }
     return render(request, 'admins/admin-users-create.html', context)
+
+# Update controller
+def admin_users_update(request, pk):
+    selected_user = User.objects.get(id=pk)
+    if request.method == 'POST':
+        form = UserAdminProfileFrom(instance=selected_user, files=request.FILES, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Пользователь отредактирован!')
+            return HttpResponseRedirect(reverse('admins_staff:admins_users'))
+
+    else:
+        form = UserAdminProfileFrom(instance=selected_user)
+
+    context = {
+        'title': 'GeekShop - Admin',
+        'form': form,
+        'selected_user': selected_user
+
+    }
+    return render(request, 'admins/admin-users-update-delete.html', context)
