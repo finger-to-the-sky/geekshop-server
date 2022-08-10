@@ -10,20 +10,24 @@ def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 @login_required
 def basket_add(request, product_id):
-    product = Product.objects.get(id=product_id)
-    baskets = Basket.objects.filter(user=request.user, product=product)
+    products = Product.objects.all()
+    if is_ajax(request=request):
+        product = Product.objects.get(id=product_id)
+        baskets = Basket.objects.filter(user=request.user, product=product_id)
 
-    if not baskets:
-        Basket.objects.create(user=request.user, product=product, quantity=1)
-        return HttpResponseRedirect(request.META['HTTP_REFERER'])
-
-    else:
-
-        basket = baskets.first()
-        if basket.quantity <= product.quantity:
+        if not baskets:
+            Basket.objects.create(user=request.user, product=product, quantity=1)
+        else:
+            basket = baskets.first()
             basket.quantity += 1
-            basket.save()
-        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+            if basket.quantity <= product.quantity:
+                basket.save()
+        context = {
+            'baskets': baskets,
+            'products': products
+        }
+        result = render_to_string('products/products_list.html', context)
+        return JsonResponse({'result': result})
 
 @login_required
 def basket_remove(request, id):
