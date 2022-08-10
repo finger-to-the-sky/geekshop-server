@@ -57,3 +57,10 @@ def admin_users_update(request, pk):
 
     }
     return render(request, 'admins/admin-users-update-delete.html', context)
+
+
+def admin_users_delete(request, pk):
+    user = User.objects.get(id=pk)
+    user.delete()
+    messages.success(request, 'Пользователь удален!')
+    return HttpResponseRedirect(reverse('admins_staff:admins_users'))
