@@ -64,10 +64,6 @@ class UserAdminDeleteView(CommonMixin, DeleteView):
     success_url = reverse_lazy('admins_staff:admin_users')
     success_message = 'Пользователь удален!'
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.safe_delete()
-        return HttpResponseRedirect(self.success_url)
 
 
 
