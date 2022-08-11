@@ -1,0 +1,65 @@
+{% extends 'admins/base.html' %}
+
+{% block content %}
+      {% if messages %}
+            <div class="
+            alert alert-dismissible fade show
+            {% if messages %} alert-success {% else %} alert-warning {% endif %}" role="alert"
+                 style="margin-top: 50px;">
+                {% if messages %}
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                {% else %}
+                    {{ form.non_field_errors }}
+                {% endif %}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+      {% endif %}
+    <main>
+            <div class="container-fluid">
+                <h1 class="mt-4">Категории</h1>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        Категории
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Название</th>
+                                    <th>Описание</th>
+                                </tr>
+                                </thead>
+                                <tfoot>
+                                <tr>
+                                    <th>Название</th>
+                                    <th>Описание</th>
+                                </tr>
+                                </tfoot>
+                                <tbody>
+                                {% for product in products_categories %}
+                                    <tr>
+                                    <td><a href="{% url 'admins_staff:admin_users_update' user.id %}" style="color: dodgerblue">
+                                        {{ product.name }}</a></td>
+                                    <td>{{ product.description }}</td>
+
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'admins_staff:admin_users_create' %}">
+                            <button class="btn btn-success">Создать пользователя</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+{% endblock %}
