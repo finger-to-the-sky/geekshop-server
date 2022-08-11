@@ -20,6 +20,12 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     quantity = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
+    is_active = models.BooleanField('активность', default=True)
 
     def __str__(self):
         return f'Продукт {self.name} | Категория: {self.category.name}'
+
+
+    def safe_delete(self):
+        self.is_active = False
+        self.save()

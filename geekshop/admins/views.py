@@ -3,9 +3,9 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 
-from admins.forms import UserAdminRegistrationFrom, UserAdminProfileFrom, CategoriesAdminForm
+from admins.forms import UserAdminRegistrationFrom, UserAdminProfileFrom, CategoriesAdminForm, ProductsAdminForm
 from users.models import User
-from products.models import ProductCategory
+from products.models import ProductCategory, Product
 
 
 
@@ -20,7 +20,7 @@ class AdminUsers:
 
     # Read Controller
     @user_passes_test(lambda u: u.is_staff)
-    def admins_users(request):
+    def admin_users(request):
         users = User.objects.all()
 
         context = {
@@ -38,7 +38,7 @@ class AdminUsers:
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Пользователь успешно создан!')
-                return HttpResponseRedirect(reverse('admins_staff:admins_users'))
+                return HttpResponseRedirect(reverse('admins_staff:admin_users'))
 
         else:
             form = UserAdminRegistrationFrom()
@@ -55,7 +55,7 @@ class AdminUsers:
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Пользователь отредактирован!')
-                return HttpResponseRedirect(reverse('admins_staff:admins_users'))
+                return HttpResponseRedirect(reverse('admins_staff:admin_users'))
 
         else:
             form = UserAdminProfileFrom(instance=selected_user)
@@ -75,14 +75,14 @@ class AdminUsers:
         user = User.objects.get(id=pk)
         user.save_delete()
         messages.success(request, 'Пользователь деактивирован!')
-        return HttpResponseRedirect(reverse('admins_staff:admins_users'))
+        return HttpResponseRedirect(reverse('admins_staff:admin_users'))
 
 
 class AdminCategories:
 
     # Read Controller
     @user_passes_test(lambda u: u.is_staff)
-    def admins_categories(request):
+    def admin_categories(request):
         products_categories = ProductCategory.objects.all()
 
         context = {
@@ -99,7 +99,7 @@ class AdminCategories:
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Категория успешно создана!')
-                return HttpResponseRedirect(reverse('admins_staff:admins_categories'))
+                return HttpResponseRedirect(reverse('admins_staff:admin_categories'))
 
         else:
             form = CategoriesAdminForm()
@@ -115,7 +115,7 @@ class AdminCategories:
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Категория отредактирована!')
-                return HttpResponseRedirect(reverse('admins_staff:admins_categories'))
+                return HttpResponseRedirect(reverse('admins_staff:admin_categories'))
 
         else:
             form = CategoriesAdminForm(instance=selected_category)
@@ -134,4 +134,64 @@ class AdminCategories:
         products_categories = ProductCategory.objects.get(id=pk)
         products_categories.safe_delete()
         messages.success(request, 'Категория деактивирована!')
-        return HttpResponseRedirect(reverse('admins_staff:admins_categories'))
+        return HttpResponseRedirect(reverse('admins_staff:admin_categories'))
+
+
+class AdminProducts:
+
+    # Read Controller
+    @user_passes_test(lambda u: u.is_staff)
+    def admin_products(request):
+        admin_products = Product.objects.all()
+
+        context = {
+            'title': 'GeekShop - Admin',
+            'admin_products': admin_products,
+        }
+        return render(request, 'admins/admin-products-read.html', context)
+
+    # Create Controller
+    @user_passes_test(lambda u: u.is_staff)
+    def admin_products_create(request):
+        if request.method == 'POST':
+            form = ProductsAdminForm(data=request.POST, files=request.FILES)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Продукт успешно создан!')
+                return HttpResponseRedirect(reverse('admins_staff:admin_products'))
+
+        else:
+            form = ProductsAdminForm()
+        context = {'title': 'Создание продукта', 'form': form, }
+        return render(request, 'admins/admin-products-create.html', context)
+
+    # Update controller
+    @user_passes_test(lambda u: u.is_staff)
+    def admin_products_update(request, pk):
+        selected_product = Product.objects.get(id=pk)
+        if request.method == 'POST':
+            form = ProductsAdminForm(instance=selected_product, files=request.FILES, data=request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Продукт отредактирован!')
+                return HttpResponseRedirect(reverse('admins_staff:admin_products'))
+
+        else:
+            form = ProductsAdminForm(instance=selected_product)
+
+        context = {
+            'title': 'GeekShop - Admin',
+            'form': form,
+            'selected_product': selected_product
+
+        }
+        return render(request, 'admins/admin-products-update-delete.html', context)
+
+
+    # Delete Controller
+    @user_passes_test(lambda u: u.is_staff)
+    def admin_products_delete(request, pk):
+        admins_products = Product.objects.get(id=pk)
+        admins_products.safe_delete()
+        messages.success(request, 'Товар деактивирован!')
+        return HttpResponseRedirect(reverse('admins_staff:admin_products'))
