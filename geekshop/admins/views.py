@@ -1,7 +1,9 @@
 from django.shortcuts import render, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView
 
 from admins.forms import UserAdminRegistrationFrom, UserAdminProfileFrom, CategoriesAdminForm, ProductsAdminForm
 from users.models import User
@@ -16,34 +18,42 @@ def index(request):
     }
     return render(request, 'admins/index.html', context)
 
+
+class UserAdminListView(ListView):
+    model = User
+    template_name = 'admins/admin-users-read.html'
+
+class UserAdminCreateView(CreateView):
+    model = User
+    template_name = 'admins/admin-users-create.html'
+    form_class = UserAdminRegistrationFrom
+    success_url = reverse_lazy('admins_staff:admin_users')
+
+
 class AdminUsers:
 
-    # Read Controller
-    @user_passes_test(lambda u: u.is_staff)
-    def admin_users(request):
-        users = User.objects.all()
-
-        context = {
-            'title': 'GeekShop - Admin',
-            'users': users,
-        }
-        return render(request, 'admins/admin-users-read.html', context)
+    # # Read Controller
+    # @user_passes_test(lambda u: u.is_staff)
+    # def admin_users(request):
+    #     users = User.objects.all()
+    #     context = {'title': 'GeekShop - Admin', 'users': users,}
+    #     return render(request, 'admins/admin-users-read.html', context)
 
 
     # Create Controller
-    @user_passes_test(lambda u: u.is_staff)
-    def admin_users_create(request):
-        if request.method == 'POST':
-            form = UserAdminRegistrationFrom(data=request.POST, files=request.FILES)
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'Пользователь успешно создан!')
-                return HttpResponseRedirect(reverse('admins_staff:admin_users'))
-
-        else:
-            form = UserAdminRegistrationFrom()
-        context = {'title': 'Создание пользователя', 'form': form, }
-        return render(request, 'admins/admin-users-create.html', context)
+    # @user_passes_test(lambda u: u.is_staff)
+    # def admin_users_create(request):
+    #     if request.method == 'POST':
+    #         form = UserAdminRegistrationFrom(data=request.POST, files=request.FILES)
+    #         if form.is_valid():
+    #             form.save()
+    #             messages.success(request, 'Пользователь успешно создан!')
+    #             return HttpResponseRedirect(reverse('admins_staff:admin_users'))
+    #
+    #     else:
+    #         form = UserAdminRegistrationFrom()
+    #     context = {'title': 'Создание пользователя', 'form': form, }
+    #     return render(request, 'admins/admin-users-create.html', context)
 
 
     # Update controller
