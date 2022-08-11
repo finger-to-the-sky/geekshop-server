@@ -3,7 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from admins.forms import UserAdminRegistrationFrom, UserAdminProfileFrom, CategoriesAdminForm, ProductsAdminForm
 from users.models import User
@@ -36,8 +36,20 @@ class UserAdminUpdateView(UpdateView):
     success_url = reverse_lazy('admins_staff:admin_users')
 
 
+class UserAdminDeleteView(DeleteView):
+    model = User
+    template_name = 'admins/admin-users-update-delete.html'
+    success_url = reverse_lazy('admins_staff:admin_users')
 
-class AdminUsers:
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.safe_delete()
+        return HttpResponseRedirect(self.success_url)
+
+
+
+
+# class AdminUsers:
 
     # # Read Controller
     # @user_passes_test(lambda u: u.is_staff)
@@ -85,13 +97,13 @@ class AdminUsers:
     #     return render(request, 'admins/admin-users-update-delete.html', context)
 
 
-    # Delete Controller
-    @user_passes_test(lambda u: u.is_staff)
-    def admin_users_delete(request, pk):
-        user = User.objects.get(id=pk)
-        user.save_delete()
-        messages.success(request, 'Пользователь деактивирован!')
-        return HttpResponseRedirect(reverse('admins_staff:admin_users'))
+    # # Delete Controller
+    # @user_passes_test(lambda u: u.is_staff)
+    # def admin_users_delete(request, pk):
+    #     user = User.objects.get(id=pk)
+    #     user.save_delete()
+    #     messages.success(request, 'Пользователь деактивирован!')
+    #     return HttpResponseRedirect(reverse('admins_staff:admin_users'))
 
 
 class AdminCategories:
