@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 
-from admins.forms import UserAdminRegistrationFrom, UserAdminProfileFrom
+from admins.forms import UserAdminRegistrationFrom, UserAdminProfileFrom, CategoriesAdminForm
 from users.models import User
 from products.models import ProductCategory
 
@@ -90,48 +90,48 @@ class AdminCategories:
             'products_categories': products_categories,
         }
         return render(request, 'admins/admin-categories-read.html', context)
-    #
-    # # Create Controller
-    # @user_passes_test(lambda u: u.is_staff)
-    # def admin_users_create(request):
-    #     if request.method == 'POST':
-    #         form = UserAdminRegistrationFrom(data=request.POST, files=request.FILES)
-    #         if form.is_valid():
-    #             form.save()
-    #             messages.success(request, 'Пользователь успешно создан!')
-    #             return HttpResponseRedirect(reverse('admins_staff:admins_users'))
-    #
-    #     else:
-    #         form = UserAdminRegistrationFrom()
-    #     context = {'title': 'Создание пользователя', 'form': form, }
-    #     return render(request, 'admins/admin-users-create.html', context)
-    #
-    # # Update controller
-    # @user_passes_test(lambda u: u.is_staff)
-    # def admin_users_update(request, pk):
-    #     selected_user = User.objects.get(id=pk)
-    #     if request.method == 'POST':
-    #         form = UserAdminProfileFrom(instance=selected_user, files=request.FILES, data=request.POST)
-    #         if form.is_valid():
-    #             form.save()
-    #             messages.success(request, 'Пользователь отредактирован!')
-    #             return HttpResponseRedirect(reverse('admins_staff:admins_users'))
-    #
-    #     else:
-    #         form = UserAdminProfileFrom(instance=selected_user)
-    #
-    #     context = {
-    #         'title': 'GeekShop - Admin',
-    #         'form': form,
-    #         'selected_user': selected_user
-    #
-    #     }
-    #     return render(request, 'admins/admin-users-update-delete.html', context)
-    #
-    # # Delete Controller
-    # @user_passes_test(lambda u: u.is_staff)
-    # def admin_users_delete(request, pk):
-    #     user = User.objects.get(id=pk)
-    #     user.save_delete()
-    #     messages.success(request, 'Пользователь деактивирован!')
-    #     return HttpResponseRedirect(reverse('admins_staff:admins_users'))
+
+    # Create Controller
+    @user_passes_test(lambda u: u.is_staff)
+    def admin_categories_create(request):
+        if request.method == 'POST':
+            form = CategoriesAdminForm(data=request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Категория успешно создана!')
+                return HttpResponseRedirect(reverse('admins_staff:admins_categories'))
+
+        else:
+            form = CategoriesAdminForm()
+        context = {'title': 'Создание категории', 'form': form, }
+        return render(request, 'admins/admin-categories-create.html', context)
+
+    # Update controller
+    @user_passes_test(lambda u: u.is_staff)
+    def admin_categories_update(request, pk):
+        selected_category = ProductCategory.objects.get(id=pk)
+        if request.method == 'POST':
+            form = CategoriesAdminForm(instance=selected_category, data=request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Категория отредактирована!')
+                return HttpResponseRedirect(reverse('admins_staff:admins_categories'))
+
+        else:
+            form = CategoriesAdminForm(instance=selected_category)
+
+        context = {
+            'title': 'GeekShop - Admin',
+            'form': form,
+            'selected_category': selected_category
+
+        }
+        return render(request, 'admins/admin-categories-update-delete.html', context)
+
+    # Delete Controller
+    @user_passes_test(lambda u: u.is_staff)
+    def admin_categories_delete(request, pk):
+        products_categories = ProductCategory.objects.get(id=pk)
+        products_categories.safe_delete()
+        messages.success(request, 'Категория деактивирована!')
+        return HttpResponseRedirect(reverse('admins_staff:admins_categories'))
