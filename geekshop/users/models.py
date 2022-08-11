@@ -9,6 +9,6 @@ class User(AbstractUser):
     birthday = models.PositiveIntegerField('Age', null=True)
 
 
-    def save_delete(self):
+    def safe_delete(self):
         self.is_active = False
         self.save()
