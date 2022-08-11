@@ -14,6 +14,7 @@
         <option value="$MODULE_DIR$/geekshop/products/templates" />
         <option value="$MODULE_DIR$/geekshop/users/templates" />
         <option value="$MODULE_DIR$/geekshop/baskets/templates" />
+        <option value="$MODULE_DIR$/geekshop/admins/templates" />
       </list>
     </option>
   </component>
