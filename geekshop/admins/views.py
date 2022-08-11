@@ -3,7 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 
 from admins.forms import UserAdminRegistrationFrom, UserAdminProfileFrom, CategoriesAdminForm, ProductsAdminForm
 from users.models import User
@@ -28,6 +28,13 @@ class UserAdminCreateView(CreateView):
     template_name = 'admins/admin-users-create.html'
     form_class = UserAdminRegistrationFrom
     success_url = reverse_lazy('admins_staff:admin_users')
+
+class UserAdminUpdateView(UpdateView):
+    model = User
+    template_name = 'admins/admin-users-update-delete.html'
+    form_class = UserAdminProfileFrom
+    success_url = reverse_lazy('admins_staff:admin_users')
+
 
 
 class AdminUsers:
@@ -55,28 +62,27 @@ class AdminUsers:
     #     context = {'title': 'Создание пользователя', 'form': form, }
     #     return render(request, 'admins/admin-users-create.html', context)
 
-
     # Update controller
-    @user_passes_test(lambda u: u.is_staff)
-    def admin_users_update(request, pk):
-        selected_user = User.objects.get(id=pk)
-        if request.method == 'POST':
-            form = UserAdminProfileFrom(instance=selected_user, files=request.FILES, data=request.POST)
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'Пользователь отредактирован!')
-                return HttpResponseRedirect(reverse('admins_staff:admin_users'))
-
-        else:
-            form = UserAdminProfileFrom(instance=selected_user)
-
-        context = {
-            'title': 'GeekShop - Admin',
-            'form': form,
-            'selected_user': selected_user
-
-        }
-        return render(request, 'admins/admin-users-update-delete.html', context)
+    # @user_passes_test(lambda u: u.is_staff)
+    # def admin_users_update(request, pk):
+    #     selected_user = User.objects.get(id=pk)
+    #     if request.method == 'POST':
+    #         form = UserAdminProfileFrom(instance=selected_user, files=request.FILES, data=request.POST)
+    #         if form.is_valid():
+    #             form.save()
+    #             messages.success(request, 'Пользователь отредактирован!')
+    #             return HttpResponseRedirect(reverse('admins_staff:admin_users'))
+    #
+    #     else:
+    #         form = UserAdminProfileFrom(instance=selected_user)
+    #
+    #     context = {
+    #         'title': 'GeekShop - Admin',
+    #         'form': form,
+    #         'selected_user': selected_user
+    #
+    #     }
+    #     return render(request, 'admins/admin-users-update-delete.html', context)
 
 
     # Delete Controller
