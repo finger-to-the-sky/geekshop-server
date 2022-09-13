@@ -30,8 +30,8 @@
 
 - Вариант №2: 
 - - Шаг 1. Необходимо активировать виртуальное окружение. 
-- - Шаг 2. Затем установить зависимости из requirements.txt командой | pip install -r requirements.txt
+- - Шаг 2. Затем установить зависимости из requirements.txt командой | <b>pip install -r requirements.txt</b>
 - - Шаг 3. Перейти в директорию, где лежит файл manage.py
-- - Шаг 4. Сделать миграции командой | python ./manage.py migrate
-- - Шаг 5. Запустить проект командой | python ./manage.py runserver
+- - Шаг 4. Сделать миграции командой | <b>python ./manage.py migrate</b>
+- - Шаг 5. Запустить проект командой | <b>python ./manage.py runserver</b>
 - В проекте <b>уже есть superuser.</b> Просто авторизуйтесь как username: admin, password: admin
