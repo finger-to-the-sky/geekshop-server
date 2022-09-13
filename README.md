@@ -34,3 +34,4 @@
 - - Шаг 3. Перейти в директорию, где лежит файл manage.py
 - - Шаг 4. Сделать миграции командой | python ./manage.py migrate
 - - Шаг 5. Запустить проект командой | python ./manage.py runserver
+- В проекте <b>уже есть superuser.</b> Просто авторизуйтесь как username: admin, password: admin
