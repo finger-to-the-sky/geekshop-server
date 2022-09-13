@@ -5,5 +5,8 @@ services:
     container_name: geekshop-server
     ports:
       - 8000:8000
-    command: python ./geekshop-server/geekshop/manage.py runserver 0.0.0.0:8000
+    command: >
+      bash -c 
+      "python ./geekshop-server/geekshop/manage.py migrate
+      && python ./geekshop-server/geekshop/manage.py runserver 0.0.0.0:8000"python ./geekshop-server/geekshop/manage.py runserver 0.0.0.0:8000
       
