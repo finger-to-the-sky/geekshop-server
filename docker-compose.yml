@@ -2,8 +2,8 @@ version: "3"
 services:
   web:
     build: .
-    container_name: geekshop-server
+    container_name: geekshop2-server
     ports:
       - 8000:8000
-    command: python ./geekshop-server/geekshop/manage.py runserver 0.0.0.0:8000
+    command: python ./geekshop2-server/geekshop2/manage.py runserver 0.0.0.0:8000
       
