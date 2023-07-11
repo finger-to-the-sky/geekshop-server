@@ -1,0 +1,1 @@
+web: gunicorn run geekshop/geekshop.wsgi: application
